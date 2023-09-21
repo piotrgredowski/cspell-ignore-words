@@ -1,8 +1,10 @@
 import json
 import pathlib
 import subprocess
+import zipfile
 from generate import main as generate_main
 from utils import StreamArray
+from tqdm import tqdm
 
 PATH_TO_CSPELL_BIN = "../node_modules/.bin/cspell"
 
@@ -20,11 +22,13 @@ def main():
 
     files = sorted(list(src_directory.glob("*.json")))
 
-    name = get_name_of_file(files[0])
-
-    (dest_directory / f"{name}.txt").unlink(missing_ok=True)
-
-    for file_ in files:
+    names = []
+    for file_ in tqdm(files):
+        name = get_name_of_file(file_)
+        dest_file = dest_directory / f"{name}.txt"
+        if dest_file not in names:
+            dest_file.unlink(missing_ok=True)
+            names.append(dest_file)
         process = subprocess.run(
             [PATH_TO_CSPELL_BIN, file_, "--words-only"], stdout=subprocess.PIPE
         )
@@ -33,8 +37,21 @@ def main():
             words_gen = (w for w in output.split("\n"))
             for w in words_gen:
                 file_.write(f"{w}\n")
-            # words_stream = StreamArray(words_gen)
-            # json.dump(words_stream, file_)
+
+    for name in names:
+        sort_file(name)
+        # zip file
+        with zipfile.ZipFile(f"{name}.zip", "w", zipfile.ZIP_DEFLATED) as zip_file:
+            zip_file.write(name)
+
+
+def sort_file(file_path: pathlib.Path):
+    with open(file_path, "r") as file_src:
+        sorted_ = sorted(file_src.readlines())
+
+    with open(file_path, "w") as file_dest:
+        file_dest.truncate()
+        file_dest.writelines(sorted_)
 
 
 if __name__ == "__main__":
