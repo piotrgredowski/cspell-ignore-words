@@ -1,0 +1,30 @@
+[project]
+name = "words-generators"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Piotr Grędowski", email = "piotrgredowski@gmail.com" }
+]
+dependencies = [
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.2",
+    "loguru>=0.7.2",
+    "icecream>=2.1.3",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "black>=23.9.1",
+    "ruff>=0.0.290",
+    "mypy>=1.5.1",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true

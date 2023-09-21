@@ -1,0 +1,14 @@
+{
+  "name": "cspell-ignore-words",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest",
+    "generator-code": "^1.7.8",
+    "yo": "^4.3.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {}
+}
